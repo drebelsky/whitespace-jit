@@ -12,19 +12,34 @@ Reader::Reader(const char *filename) : file{filename} {
       program.instructions.push_back(inst);
       current_labels.clear();
     }
-    file.get();
+    get();
     if (file.eof()) {
       break;
     }
-    file.unget();
+    unget();
   }
 }
+
+int Reader::get() {
+  while (true) {
+    int res = file.get();
+    switch (res) {
+    case '\t':
+    case '\n':
+    case ' ':
+    case EOF:
+      return res;
+    }
+  }
+}
+
+void Reader::unget() { file.unget(); }
 
 const Program &Reader::get_program() { return program; }
 int Reader::read_number() {
   int res = 0;
   bool is_neg;
-  switch (file.get()) {
+  switch (get()) {
   case ' ':
     is_neg = false;
     break;
@@ -34,24 +49,21 @@ int Reader::read_number() {
   default:
     throw "Invalid sign for number";
   }
-  while (file.peek() != '\n') {
-    res = (res << 1) | (file.get() == '\t');
+  int next;
+  while ((next = get()) != '\n') {
+    res = (res << 1) | (next == '\t');
   }
-  file.get(); // ignore newline
 
-  if (is_neg) {
-    return -res;
-  } else {
-    return res;
-  }
+  return (is_neg) ? -res : res;
 }
 
 int Reader::read_label() {
   std::string label = "";
-  while (file.peek() != '\n') {
-    label += file.get();
+  int next;
+  while ((next = get()) != '\n') {
+    label += next;
   }
-  file.get(); // ignore newline
+
   if (!labels.count(label)) {
     labels[label] = label_ind++;
   }
@@ -59,9 +71,9 @@ int Reader::read_label() {
 }
 
 Instruction Reader::read_io() {
-  switch (file.get()) {
+  switch (get()) {
   case '\t':
-    switch (file.get()) {
+    switch (get()) {
     case ' ':
       return {InstructionType::READC};
     case '\t':
@@ -69,7 +81,7 @@ Instruction Reader::read_io() {
     }
     break;
   case ' ':
-    switch (file.get()) {
+    switch (get()) {
     case ' ':
       return {InstructionType::WRITEC};
     case '\t':
@@ -81,11 +93,11 @@ Instruction Reader::read_io() {
 }
 
 Instruction Reader::read_stack() {
-  switch (file.get()) {
+  switch (get()) {
   case ' ':
     return {InstructionType::PUSH, read_number()};
   case '\n':
-    switch (file.get()) {
+    switch (get()) {
     case ' ':
       return {InstructionType::DUP};
     case '\t':
@@ -95,7 +107,7 @@ Instruction Reader::read_stack() {
     }
     break;
   case '\t':
-    switch (file.get()) {
+    switch (get()) {
     case ' ':
       return {InstructionType::COPY, read_number()};
     case '\n':
@@ -107,9 +119,9 @@ Instruction Reader::read_stack() {
 }
 
 Instruction Reader::read_arith() {
-  switch (file.get()) {
+  switch (get()) {
   case ' ':
-    switch (file.get()) {
+    switch (get()) {
     case ' ':
       return {InstructionType::ADD};
     case '\t':
@@ -119,7 +131,7 @@ Instruction Reader::read_arith() {
     }
     break;
   case '\t':
-    switch (file.get()) {
+    switch (get()) {
     case ' ':
       return {InstructionType::DIV};
     case '\t':
@@ -131,9 +143,9 @@ Instruction Reader::read_arith() {
 }
 
 Instruction Reader::read_flow() {
-  switch (file.get()) {
+  switch (get()) {
   case ' ':
-    switch (file.get()) {
+    switch (get()) {
     case ' ':
       return {InstructionType::MARK, read_label()};
     case '\t':
@@ -143,7 +155,7 @@ Instruction Reader::read_flow() {
     }
     break;
   case '\t':
-    switch (file.get()) {
+    switch (get()) {
     case ' ':
       return {InstructionType::JZ, read_label()};
     case '\t':
@@ -153,7 +165,7 @@ Instruction Reader::read_flow() {
     }
     break;
   case '\n':
-    if (file.get() == '\n') {
+    if (get() == '\n') {
       return {InstructionType::END};
     }
     break;
@@ -162,7 +174,7 @@ Instruction Reader::read_flow() {
 }
 
 Instruction Reader::read_heap() {
-  switch (file.get()) {
+  switch (get()) {
   case ' ':
     return {InstructionType::STORE};
   case '\t':
@@ -172,9 +184,9 @@ Instruction Reader::read_heap() {
 }
 
 Instruction Reader::read_instruction() {
-  switch (file.get()) {
+  switch (get()) {
   case '\t':
-    switch (file.get()) {
+    switch (get()) {
     case '\n':
       return read_io();
     case ' ':

@@ -27,5 +27,7 @@ private:
   Instruction read_flow();
   Instruction read_heap();
   Instruction read_instruction();
+  int get();
+  void unget();
 };
 #endif
