@@ -11,7 +11,8 @@ const size_t kPageSize = sysconf(_SC_PAGESIZE);
 using std::vector;
 
 namespace util {
-void store(std::unordered_map<int64_t, int64_t> *heap, int64_t key, int64_t val) {
+void store(std::unordered_map<int64_t, int64_t> *heap, int64_t key,
+           int64_t val) {
   (*heap)[key] = val;
 }
 
@@ -148,27 +149,14 @@ void store(vector<uint8_t> &instructions) {
   uint8_t func_addr[8];
   copy_bytes(func_addr, reinterpret_cast<uint64_t>(util::store));
 
-  instructions.insert(instructions.end(), {
-                                              0x49,
-                                              0x83,
-                                              0xec,
-                                              0x10, // sub    $0x10,%r12
-                                              0x4c,
-                                              0x89,
-                                              0xef, // mov    %r13,%rdi
-                                              0x49,
-                                              0x8b,
-                                              0x34,
-                                              0x24, // mov    (%r12),%rsi
-                                              0x49,
-                                              0x8b,
-                                              0x54,
-                                              0x24,
-                                              0x08, // mov    0x8(%r12),%rdx
-                                              // movabs func_addr,%rax
-                                              0x48,
-                                              0xb8,
-                                          });
+  instructions.insert(instructions.end(),
+                      {
+                          0x49, 0x83, 0xec, 0x10,       // sub    $0x10,%r12
+                          0x4c, 0x89, 0xef,             // mov    %r13,%rdi
+                          0x49, 0x8b, 0x34, 0x24,       // mov    (%r12),%rsi
+                          0x49, 0x8b, 0x54, 0x24, 0x08, // mov    0x8(%r12),%rdx
+                          0x48, 0xb8, // movabs func_addr,%rax (beginning)
+                      });
   instructions.insert(instructions.end(), func_addr, func_addr + 8);
   // callq *%rax
   instructions.insert(instructions.end(), {0xff, 0xd0});
@@ -178,19 +166,12 @@ void retrieve(vector<uint8_t> &instructions) {
   uint8_t func_addr[8];
   copy_bytes(func_addr, reinterpret_cast<uint64_t>(util::retrieve));
 
-  instructions.insert(instructions.end(), {
-                                              0x4c,
-                                              0x89,
-                                              0xef, // mov    %r13,%rdi
-                                              0x49,
-                                              0x8b,
-                                              0x74,
-                                              0x24,
-                                              0xf8, // mov    -0x8(%r12),%rsi
-                                              // movabs func_addr,%rax
-                                              0x48,
-                                              0xb8,
-                                          });
+  instructions.insert(instructions.end(),
+                      {
+                          0x4c, 0x89, 0xef,             // mov    %r13,%rdi
+                          0x49, 0x8b, 0x74, 0x24, 0xf8, // mov -0x8(%r12),%rsi
+                          0x48, 0xb8, // movabs func_addr,%rax (beginning)
+                      });
   instructions.insert(instructions.end(), func_addr, func_addr + 8);
   instructions.insert(instructions.end(),
                       {
@@ -245,7 +226,7 @@ void slide(vector<uint8_t> &instructions, int x) {
   instructions.insert(instructions.end(),
                       {
                           0x49, 0x8b, 0x44, 0x24, 0xf8, // mov -0x8(%r12),%rax
-                          0x49, 0x81, 0xec,             // sub    $x*8,%r12
+                          0x49, 0x81, 0xec, // sub    $x*8,%r12 (beginning)
                       });
   instructions.insert(instructions.end(), offset, offset + 4);
   // mov    %rax,-0x8(%r12)
