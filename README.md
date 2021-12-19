@@ -23,9 +23,17 @@ Below are the comparison runs for 1. [the original whitespace interpreter (versi
 
 Command                                           | real    | user    | sys
 :-------------------------------------------------|--------:|--------:|--------:
-`time ./compile f programs/is_prime.ws >/dev/null`|0m0.684s |0m0.641s |0m0.016s
-`time ./compile t programs/is_prime.ws >/dev/null`|0m0.223s |0m0.188s |0m0.016s
-`time ./wspace programs/is_prime.ws >/dev/null   `|0m27.274s|0m24.875s|0m0.219s
+`time ./wspace programs/is_prime.ws >/dev/null   `|  27.274s|  24.875s|  0.219s
+`time ./compile f programs/is_prime.ws >/dev/null`|  0.684s |  0.641s |  0.016s
+`time ./compile t programs/is_prime.ws >/dev/null`|  0.223s |  0.188s |  0.016s
+
+Speed-up relative to original interpreter
+
+Command                                           | real    | user    | sys
+:-------------------------------------------------|--------:|--------:|--------:
+`time ./wspace programs/is_prime.ws >/dev/null   `|       1x|       1x|       1x
+`time ./compile f programs/is_prime.ws >/dev/null`|  39.874x|  38.807x|  13.688x
+`time ./compile t programs/is_prime.ws >/dev/null`| 178.789x| 132.314x|  13.688x
 
 ## Acknowledgments
 Inspired by [whitespace-rs](https://github.com/CensoredUsername/whitespace-rs)
