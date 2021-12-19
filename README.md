@@ -19,7 +19,7 @@ Usage: ./compile <use_jit:t|f> <filename>
 
 
 ## Speed Comparison
-Below are the comparison runs for 1. [the original whitespace interpreter (version 0.3)](https://web.archive.org/web/20150717140342/http://compsoc.dur.ac.uk/whitespace/download.php), 2. this repository's interpreter, 3. this repository's JIT compiler. The timing was done using `bash`'s builtin `time` for running the three programs with stdout redirected to `/dev/null` on [`is_prime.ws`](https://github.com/drebelsky/whitespace-jit/blob/main/programs/is_prime.ws), a simple whitespace program that calculates the primes up to 20,000 using the naive O(n^2) algorithm.
+Below are the comparison runs for 1. [the original whitespace interpreter (version 0.3)](https://web.archive.org/web/20150717140342/http://compsoc.dur.ac.uk/whitespace/download.php), 2. this repository's interpreter, 3. this repository's JIT compiler. The timing was done using `bash`'s builtin `time` for running the three programs with stdout redirected to `/dev/null` on [`is_prime.ws`](https://github.com/drebelsky/whitespace-jit/blob/main/programs/is_prime.ws), a simple whitespace program that calculates the primes up to 20,000 using the naive O(n^2) algorithm. This program requires the execution of 234,248,149 instructions.
 
 Command                                           | real    | user    | sys
 :-------------------------------------------------|--------:|--------:|--------:
@@ -34,6 +34,14 @@ Command                                           | real    | user    | sys
 `time ./wspace programs/is_prime.ws >/dev/null   `|       1x|       1x|       1x
 `time ./compile f programs/is_prime.ws >/dev/null`|  39.874x|  38.807x|  13.688x
 `time ./compile t programs/is_prime.ws >/dev/null`| 178.789x| 132.314x|  13.688x
+
+Instructions per second (234248149 / real time)
+
+Name                         | Instructions per second
+:----------------------------|-----------------------:
+Original interpreter         |              8,588,698
+This repository's interpreter|            342,468,054
+JIT compiler                 |          1,050,440,130
 
 ## Acknowledgments
 Inspired by [whitespace-rs](https://github.com/CensoredUsername/whitespace-rs)
