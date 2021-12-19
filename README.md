@@ -5,10 +5,10 @@ A whitespace compiler/interpreter written in C++. The JIT compiler supports `x86
 
 ### Dependencies
 * `make`
-* `gc++
+* `g++`
 
 ### Compiling
-To compile just run `make`.
+To compile, just run `make`.
 
 ### Running
 The default `make` rule will compile the `compile` executable. The `compile` executable's first argument is `t` (to use the JIT compiler) or `f` (to use the interpreter); the second argument is the filename.
