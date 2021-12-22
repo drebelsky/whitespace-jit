@@ -1,5 +1,6 @@
 #include "simulator.h"
 #include <deque>
+#include <ios>
 #include <iostream>
 #include <unordered_map>
 
@@ -17,7 +18,7 @@ void simulate(const Program &program) {
     switch (inst.type) {
     case READC: {
       char n;
-      std::cin >> n;
+      std::cin >> std::noskipws >>  n;
       heap[stack.back()] = n;
       stack.pop_back();
     } break;

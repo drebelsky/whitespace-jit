@@ -1,6 +1,7 @@
 #include "jit.h"
 #include "jit_size.h"
 #include <cstdint>
+#include <ios>
 #include <iostream>
 #include <sys/mman.h>
 #include <unistd.h>
@@ -23,7 +24,7 @@ int64_t retrieve(std::unordered_map<int64_t, int64_t> *heap, int64_t key) {
 void readc(std::unordered_map<int64_t, int64_t> *heap, int64_t loc) {
   std::cout.flush();
   char c;
-  std::cin >> c;
+  std::cin >> std::noskipws >> c;
   (*heap)[loc] = c;
 }
 
