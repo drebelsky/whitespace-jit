@@ -1,5 +1,5 @@
 # Whitespace JIT
-A whitespace compiler/interpreter written in C++. The JIT compiler supports `x86_64` machines with System V AMD64 ABI calling conventions. The interpreter should be more universally usable.
+A [Whitespace](https://esolangs.org/wiki/Whitespace) compiler/interpreter written in C++. The JIT compiler supports `x86_64` machines with System V AMD64 ABI calling conventions. The interpreter should be more universally usable. For some sample Whitespace programs, see the [Esolangs page](https://esolangs.org/wiki/Whitespace) or my [Whitespace programs repository](https://github.com/drebelsky/whitespace-programs).
 
 ## Usage
 
