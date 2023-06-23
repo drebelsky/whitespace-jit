@@ -12,7 +12,6 @@ public:
 
 private:
   std::ifstream file;
-  size_t index{0};
   int label_ind{0};
   std::map<std::string, int>
       labels; // while reading, map from given label to internal size_t
