@@ -1,12 +1,12 @@
 default: compile
 
-CXXFLAGS=-O3 -Wall -Wpedantic -Werror -std=c++17
-CXX?=g++
-CC_FILES=$(wildcard *.cc)
-H_FILES=$(wildcard *.h)
-OBJ_FILES=$(patsubst %.cc, %.o, $(CC_FILES))
+CXXFLAGS  = -O3 -Wall -Wpedantic -Werror -std=c++17
+CXX      ?= g++
+CC_FILES  = $(wildcard *.cc)
+H_FILES   = $(wildcard *.h)
+OBJ_FILES = $(patsubst %.cc, %.o, $(CC_FILES))
 
-debug: CXXFLAGS=-Og -g -Wall -Wpedantic -Werror -std=c++17
+debug: CXXFLAGS=-O0 -g -Wall -Wpedantic -Werror -std=c++17 -fsanitize=address
 
 debug: $(CC_FILES)
 	$(CXX) -o $@ $(CC_FILES) $(CXXFLAGS)
