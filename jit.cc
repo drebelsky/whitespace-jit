@@ -52,9 +52,11 @@ void copy_bytes4(uint8_t buf[], uint32_t val) {
 
 namespace writei {
 void start(vector<uint8_t> &instructions) {
+  // Note: we don't use %r14 currently, but we need to align the stack
   instructions.insert(instructions.end(), {
                                               0x41, 0x54,       // push   %r12
                                               0x41, 0x55,       // push   %r13
+                                              0x41, 0x56,       // push   %r14
                                               0x49, 0x89, 0xfc, // mov %rdi,%r12
                                               0x49, 0x89, 0xf5, // mov %rsi,%r13
                                           });
@@ -67,6 +69,7 @@ void ret(vector<uint8_t> &instructions) {
 
 void end(vector<uint8_t> &instructions) {
   instructions.insert(instructions.end(), {
+                                              0x41, 0x5e, // pop %r14
                                               0x41, 0x5d, // pop %r13
                                               0x41, 0x5c, // pop %r12
                                               0xc3        // retq
