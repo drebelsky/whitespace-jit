@@ -9,7 +9,7 @@ namespace writei {
   void start(vector<uint8_t>& instructions);
   void ret(vector<uint8_t>& instructions);
   void end(vector<uint8_t>& instructions);
-  void push(vector<uint8_t>& instructions, long val);
+  void push(vector<uint8_t>& instructions, int64_t val);
   void readc(vector<uint8_t>& instructions);
   void readn(vector<uint8_t>& instructions);
   void writec(vector<uint8_t>& instructions);
