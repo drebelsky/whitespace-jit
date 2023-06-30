@@ -23,25 +23,26 @@ Below are the comparison runs for 1. [the original whitespace interpreter (versi
 
 Command                                           | real    | user    | sys
 :-------------------------------------------------|--------:|--------:|--------:
-`time ./wspace programs/is_prime.ws >/dev/null   `|  27.274s|  24.875s|  0.219s
-`time ./compile f programs/is_prime.ws >/dev/null`|  0.684s |  0.641s |  0.016s
-`time ./compile t programs/is_prime.ws >/dev/null`|  0.223s |  0.188s |  0.016s
+`time ./wspace programs/is_prime.ws >/dev/null   `|  27.594s|  27.345s|  0.213s
+`time ./compile f programs/is_prime.ws >/dev/null`|  0.954s |  0.942s |  0.007s
+`time ./compile t programs/is_prime.ws >/dev/null`|  0.248s |  0.244s |  0.002s
 
 Speed-up relative to original interpreter
 
 Command                                           | real    | user    | sys
 :-------------------------------------------------|--------:|--------:|--------:
 `time ./wspace programs/is_prime.ws >/dev/null   `|       1x|       1x|       1x
-`time ./compile f programs/is_prime.ws >/dev/null`|  39.874x|  38.807x|  13.688x
-`time ./compile t programs/is_prime.ws >/dev/null`| 178.789x| 132.314x|  13.688x
+`time ./compile f programs/is_prime.ws >/dev/null`|  28.925x|  29.029x|  30.429x
+`time ./compile t programs/is_prime.ws >/dev/null`| 111.266x| 112.070x|   106.5x
 
 Instructions per second (234248149 / real time)
 
+
 Name                         | Instructions per second
 :----------------------------|-----------------------:
-Original interpreter         |              8,588,698
-This repository's interpreter|            342,468,054
-JIT compiler                 |          1,050,440,130
+Original interpreter         |              8,489,097
+This repository's interpreter|            394,357,153
+JIT compiler                 |            944,548,987
 
 ## Acknowledgments
 Inspired by [whitespace-rs](https://github.com/CensoredUsername/whitespace-rs)
