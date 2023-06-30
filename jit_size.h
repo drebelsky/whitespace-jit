@@ -24,7 +24,7 @@ const std::unordered_map<InstructionType, size_t> kInstructionSizes {
   {InstructionType::MUL, 20},
   {InstructionType::DIV, 26},
   {InstructionType::MOD, 26},
-  {InstructionType::CALL, 5},
+  {InstructionType::CALL, 13},
   {InstructionType::JUMP, 5},
   {InstructionType::JZ, 15},
   {InstructionType::JN, 15},

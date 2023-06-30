@@ -57,6 +57,7 @@ void start(vector<uint8_t> &instructions) {
                                               0x41, 0x54,       // push   %r12
                                               0x41, 0x55,       // push   %r13
                                               0x41, 0x56,       // push   %r14
+                                              0x49, 0x89, 0xe6, // mov %rsp, %r14
                                               0x49, 0x89, 0xfc, // mov %rdi,%r12
                                               0x49, 0x89, 0xf5, // mov %rsi,%r13
                                           });
@@ -69,6 +70,7 @@ void ret(vector<uint8_t> &instructions) {
 
 void end(vector<uint8_t> &instructions) {
   instructions.insert(instructions.end(), {
+                                              0x4c, 0x89, 0xf4, // mov %r14, %rsp
                                               0x41, 0x5e, // pop %r14
                                               0x41, 0x5d, // pop %r13
                                               0x41, 0x5c, // pop %r12
@@ -303,16 +305,25 @@ void mod(vector<uint8_t> &instructions) {
 }
 
 void call(vector<uint8_t> &instructions, int instruction) {
-  int delta = instruction - static_cast<int>(instructions.size() + 5);
+  int delta = instruction - static_cast<int>(instructions.size()) - 9;
   uint8_t offset[4];
   copy_bytes4(offset, static_cast<uint32_t>(delta));
-  // call     instr
-  instructions.insert(instructions.end(), {0xe8});
+  // we need to keep the stack 16 byte aligned
+  instructions.insert(
+    instructions.end(),
+    {
+      0x48, 0x83, 0xec, 0x08, // sub $0x8, %rsp
+      // call     instr
+      0xe8
+    }
+  );
   instructions.insert(instructions.end(), offset, offset + 4);
+  // add $0x8, %rsp
+  instructions.insert(instructions.end(), {0x48, 0x83, 0xc4, 0x08});
 }
 
 void jump(vector<uint8_t> &instructions, int instruction) {
-  int delta = instruction - static_cast<int>(instructions.size() + 5);
+  int delta = instruction - static_cast<int>(instructions.size()) - 5;
   uint8_t offset[4];
   copy_bytes4(offset, static_cast<uint32_t>(delta));
   // jmp     instr
@@ -321,7 +332,7 @@ void jump(vector<uint8_t> &instructions, int instruction) {
 }
 
 void jz(vector<uint8_t> &instructions, int instruction) {
-  int delta = instruction - static_cast<int>(instructions.size() + 15);
+  int delta = instruction - static_cast<int>(instructions.size()) - 15;
   uint8_t offset[4];
   copy_bytes4(offset, static_cast<uint32_t>(delta));
   instructions.insert(instructions.end(),
@@ -333,7 +344,7 @@ void jz(vector<uint8_t> &instructions, int instruction) {
 }
 
 void jn(vector<uint8_t> &instructions, int instruction) {
-  int delta = instruction - static_cast<int>(instructions.size() + 15);
+  int delta = instruction - static_cast<int>(instructions.size()) - 15;
   uint8_t offset[4];
   copy_bytes4(offset, static_cast<uint32_t>(delta));
   instructions.insert(instructions.end(),
